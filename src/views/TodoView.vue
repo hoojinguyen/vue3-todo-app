@@ -1,6 +1,6 @@
 <template>
   <div class="todo">
-    <h1>This is a todo page</h1>
+    <h1 class="text-3xl font-bold underline">This is a todo page</h1>
   </div>
 </template>
 

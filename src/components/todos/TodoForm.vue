@@ -8,31 +8,42 @@
       required
     />
     <button>
-      {{ formType === "create" ? "Add new Item" : "Update Todo" }}
+      {{ form.id ? "Update Item" : "Add new Item" }}
     </button>
   </form>
 </template>
 
 <script setup lang="ts">
-import type { TodoItem } from "@/stores/todo";
-import { computed, ref } from "vue";
-
-type FormType = "create" | "update";
+import { useTodoStore, type TodoItem } from "@/stores/todo";
+import { ref, watch } from "vue";
+import { uuid } from "@/utils";
 
 const props = defineProps<{
-  data: TodoItem | undefined;
+  data: TodoItem;
 }>();
 
-const emits = defineEmits<{
-  (e: "submit", value: { data: TodoItem; type: FormType }): void;
+const emit = defineEmits<{
+  (e: "reset"): void;
 }>();
 
-const formType = computed<FormType>(() => (props.data ? "update" : "create"));
+const todoStore = useTodoStore();
 
-const form = ref<TodoItem>(props.data || { id: "", name: "", descripton: "" });
+const form = ref<TodoItem>(props.data);
+
+watch(
+  () => props.data,
+  (newValue) => (form.value = newValue)
+);
 
 const submitForm = () => {
-  emits("submit", { data: form.value, type: formType.value });
+  const { value } = form;
+  if (value.id) {
+    todoStore.update(value);
+  } else {
+    todoStore.add({ ...value, id: uuid() });
+  }
+
+  emit("reset");
 };
 </script>
 

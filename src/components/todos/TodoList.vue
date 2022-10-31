@@ -1,28 +1,29 @@
 <template>
   <div class="todo-list">
-    <ol class="list-decimal" v-for="item in list" :key="item.id">
+    <ol class="list-decimal" v-for="item in todoStore.list" :key="item.id">
       <li>
         <strong>ID: {{ item.id }}</strong>
         <h3>NAME: {{ item.name }}</h3>
         <span>DESC: {{ item.descripton }}</span>
-        <button @click="$emit('remove', item.id)">Remove</button>
-        <button @click="$emit('update', item)">Edit</button>
+        <button @click="remoteTodo(item.id)">Remove</button>
+        <button @click="$emit('edit', item)">Edit</button>
       </li>
     </ol>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { TodoItem, TodoList } from "@/stores/todo";
-
-defineProps<{
-  list: TodoList;
-}>();
+import { useTodoStore, type TodoItem } from "@/stores/todo";
 
 defineEmits<{
-  (e: "remove", id: string): void;
-  (e: "update", value: TodoItem): void;
+  (e: "edit", value: TodoItem): void;
 }>();
+
+const todoStore = useTodoStore();
+
+const remoteTodo = (id: string) => {
+  todoStore.remove(id);
+};
 </script>
 
 <style scoped>

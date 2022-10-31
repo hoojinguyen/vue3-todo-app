@@ -2,30 +2,28 @@
   <div class="todo">
     <div class="wrapper">
       <h1 class="text-3xl font-bold underline">This is a todo page</h1>
-      <div class="todo-form">
-        <input type="text" placeholder="Enter name" v-model="form.name" />
+      <form class="todo-form" @submit.prevent="submitForm">
         <input
+          v-model="form.name"
           type="text"
-          placeholder="Enter description"
-          v-model="form.descripton"
+          placeholder="Enter name"
+          required
         />
-        <p v-show="messageError" class="message-error">{{ messageError }}</p>
-        <button v-if="formType === 'create'" @click="formHandler.add()">
-          Add new Item
+        <input
+          v-model="form.descripton"
+          placeholder="Enter description"
+          type="text"
+          required
+        />
+        <button>
+          {{ form.id ? "update" : "create" }}
         </button>
-        <button v-else @click="formHandler.update()">Update Todo</button>
-      </div>
-      <div class="todo-list">
-        <ol class="list-decimal" v-for="item in todoStore.list" :key="item.id">
-          <li>
-            <strong>ID: {{ item.id }}</strong>
-            <h3>NAME: {{ item.name }}</h3>
-            <span>DESC: {{ item.descripton }}</span>
-            <button @click="formHandler.remove(item.id)">Remove</button>
-            <button @click="formAction.swichType(item)">Edit</button>
-          </li>
-        </ol>
-      </div>
+      </form>
+      <TodoList
+        :list="todoStore.list"
+        @remove="removeTodo"
+        @update="updateTodo"
+      />
     </div>
   </div>
 </template>
@@ -35,55 +33,30 @@ import { useTodoStore, type TodoItem } from "@/stores/todo";
 import { uuid } from "@/utils";
 import { ref } from "vue";
 
-const initialForm = { id: "", name: "", descripton: "" };
-
-type FormType = "create" | "update";
-
-const form = ref<TodoItem>(initialForm);
-const formType = ref<FormType>("create");
-const messageError = ref("");
+import TodoList from "@/components/todos/TodoList.vue";
 
 const todoStore = useTodoStore();
 
-const formAction = {
-  reset: () => {
-    form.value = { id: "", name: "", descripton: "" };
-    formType.value = "create";
-  },
-  swichType: (item: TodoItem, type: FormType = "update") => {
-    form.value = { ...item };
-    formType.value = type;
-  },
-  validate: () => {
-    for (const [key, value] of Object.entries(form.value)) {
-      if (key === "id") continue;
+const form = ref<TodoItem>({ id: "", name: "", descripton: "" });
 
-      if (!value) {
-        messageError.value = `${key} should not be empty`;
-        return false;
-      }
-    }
-
-    return true;
-  },
+const removeTodo = (id: string) => {
+  todoStore.remove(id);
 };
 
-const formHandler = {
-  add: () => {
-    if (!formAction.validate()) return;
+const updateTodo = (item: TodoItem) => {
+  form.value = { ...item };
+};
 
-    todoStore.add({ ...form.value, id: uuid() });
-    formAction.reset();
-  },
-  remove: (id: string) => {
-    todoStore.remove(id);
-  },
-  update: () => {
-    if (!formAction.validate()) return;
-
+const submitForm = () => {
+  const isUpdate = form.value.id;
+  if (isUpdate) {
     todoStore.update(form.value);
-    formAction.reset();
-  },
+  } else {
+    todoStore.add({ ...form.value, id: uuid() });
+  }
+
+  // reset form
+  form.value = { id: "", name: "", descripton: "" };
 };
 </script>
 
@@ -94,6 +67,7 @@ const formHandler = {
     display: flex;
     align-items: center;
   }
+
   .todo-form {
     margin-top: 30px;
 
@@ -103,42 +77,15 @@ const formHandler = {
     gap: 10px;
   }
 
-  .todo-list {
-    margin-top: 30px;
+  input {
+    border: 1px solid black;
+    padding: 10px;
   }
 
   button {
     border: 1px solid black;
     padding: 5px;
     font-weight: bold;
-  }
-
-  input {
-    border: 1px solid black;
-    padding: 10px;
-  }
-
-  li {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    margin-bottom: 20px;
-    border: 1px solid grey;
-    border-radius: 10px;
-    padding: 10px;
-
-    cursor: pointer;
-  }
-
-  li:hover {
-    border: 1px solid red;
-  }
-
-  .message-error {
-    color: red;
-    font-weight: bold;
-    font-size: 24px;
   }
 }
 </style>

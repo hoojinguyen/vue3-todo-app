@@ -4,7 +4,6 @@ import { defineStore } from "pinia";
 export type TodoItem = {
   id: string;
   name: string;
-  descripton: string;
 };
 
 export type TodoList = TodoItem[];

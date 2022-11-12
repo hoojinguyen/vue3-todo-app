@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "pinia": "^2.0.23",
+    "thin-backend": "^0.12.1",
+    "thin-backend-vue": "^0.10.1",
     "vue": "^3.2.41",
     "vue-router": "^4.1.5"
   },
@@ -21,6 +23,7 @@
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/jsdom": "^20.0.0",
     "@types/node": "^16.11.68",
+    "@types/thin-backend": "https://thin.dev/types/855d4904-0655-4ae1-997a-2a8d55a06604/JoNQXBhwTNWcluKRSSsrNsAuRjwhbdGj",
     "@vitejs/plugin-vue": "^3.1.2",
     "@vitejs/plugin-vue-jsx": "^2.0.1",
     "@vue/eslint-config-prettier": "^7.0.0",

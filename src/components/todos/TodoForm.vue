@@ -1,12 +1,6 @@
 <template>
   <form class="todo-form" @submit.prevent="submitForm">
     <input v-model="form.name" type="text" placeholder="Enter name" required />
-    <input
-      v-model="form.descripton"
-      placeholder="Enter description"
-      type="text"
-      required
-    />
     <button>
       {{ form.id ? "Update Item" : "Add new Item" }}
     </button>

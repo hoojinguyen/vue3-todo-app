@@ -4,7 +4,6 @@
       <li>
         <strong>ID: {{ item.id }}</strong>
         <h3>NAME: {{ item.name }}</h3>
-        <span>DESC: {{ item.descripton }}</span>
         <button @click="remoteTodo(item.id)">Remove</button>
         <button @click="$emit('edit', item)">Edit</button>
       </li>

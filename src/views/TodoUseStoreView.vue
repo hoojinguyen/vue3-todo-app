@@ -23,7 +23,7 @@ const editTodo = (item: TodoItem) => {
 };
 
 const resetForm = () => {
-  formData.value = { id: "", name: "", descripton: "" };
+  formData.value = { id: "", name: "" };
 };
 </script>
 

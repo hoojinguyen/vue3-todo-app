@@ -13,6 +13,6 @@ import { ThinBackend } from "thin-backend-vue";
 import { RouterView } from "vue-router";
 
 initThinBackend({
-  host: "https://todo-with-vue3.thinbackend.app",
+  host: import.meta.env.VITE_THINBACKEND_URL,
 });
 </script>

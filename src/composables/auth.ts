@@ -2,7 +2,6 @@ import { loginWithRedirect, logout } from "thin-backend";
 import { useCurrentUser, useIsLoggedIn } from "thin-backend-vue";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
-const BASE_URL = "http://localhost:5173";
 
 export function useAuth() {
   const isLoading = ref(false);
@@ -18,7 +17,7 @@ export function useAuth() {
 
   const doLogout = async () => {
     isLoading.value = true;
-    await logout({ redirect: `${BASE_URL}${route.path}` });
+    await logout({ redirect: `${import.meta.env.VITE_BASE_URL}${route.path}` });
     isLoading.value = false;
   };
 

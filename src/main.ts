@@ -4,8 +4,8 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 
-import "./assets/main.css";
-import "./assets/style.css";
+import "./assets/css/main.css";
+import "./assets/css/style.css";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faTrashCan, faPen } from "@fortawesome/free-solid-svg-icons";

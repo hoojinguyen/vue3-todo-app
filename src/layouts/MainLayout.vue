@@ -2,7 +2,11 @@
   <header class="border-solid border-b-2 border-stale-400 rounded-lg pb-3">
     <div class="flex justify-between items-center">
       <div class="max-w-xs max-h-xs">
-        <img src="../assets/logo.svg" alt="logo" class="object-contain w-14" />
+        <img
+          src="../assets/images/logo.svg"
+          alt="logo"
+          class="object-contain w-14"
+        />
       </div>
       <nav class="flex justify-end gap-5">
         <RouterLink

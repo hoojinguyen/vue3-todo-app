@@ -21,25 +21,44 @@
       </div>
       <div class="w-full mt-5 flex flex-col justify-center items-center gap-4">
         <div
-          v-for="todo in todos"
+          v-for="(todo, index) in todos"
           :key="todo.id"
-          class="inline-block w-3/5 p-5 border-2 border-solid border-slate-400 rounded-xl"
+          class="inline-block w-3/5 p-5 border-2 border-solid border-slate-400 rounded-xl hover:bg-slate-100 hover:cursor-pointer"
         >
           <div class="float-left flex justify-start items-center gap-10">
             <input
               type="checkbox"
               class="accent-green-800 w-8 h-8"
-              :checked="todo.isFinish"
+              v-model="todo.isFinish"
+              @change="updateTask(todo, true)"
             />
             <label
               class="text-lg font-semibold"
               :class="{ 'line-through decoration-slate-500': todo.isFinish }"
             >
-              {{ todo.name }}
+              <input
+                ref="inputUpdateRefs"
+                class="bg-inherit w-full focus:outline-none pb-1 border-b-2 border-green-500 disabled:border-none"
+                type="text"
+                v-model="todo.name"
+                @keyup.enter="updateTask(todo)"
+                :disabled="todo.id !== idUpdating"
+              />
             </label>
           </div>
-          <div class="float-right">
-            <button>DELETE</button>
+          <div class="float-right mt-2 flex gap-3">
+            <button
+              class="text-lg hover:text-red-500"
+              @click="toggleUpdate(todo.id, index)"
+            >
+              <font-awesome-icon icon="fa-solid fa-pen" />
+            </button>
+            <button
+              class="text-lg hover:text-red-500"
+              @click="deleteTask(todo.id)"
+            >
+              <font-awesome-icon icon="fa-solid fa-trash-can" />
+            </button>
           </div>
         </div>
       </div>
@@ -62,7 +81,8 @@
 
 <script setup lang="ts">
 import { useAuth } from "@/composables/auth";
-import { createRecord, query, updateRecord } from "thin-backend";
+import { sleep } from "@/utils";
+import { createRecord, deleteRecord, query, updateRecord } from "thin-backend";
 import { useQuery } from "thin-backend-vue";
 import { ref } from "vue";
 
@@ -81,13 +101,35 @@ const todos = useQuery(query("todos").orderBy("createdAt"));
 
 const taskName = ref("");
 
-const updateTask = (todo: Todo) => {
-  updateRecord("todos", todo.id, { name: taskName.value });
+const idUpdating = ref("");
+
+const inputUpdateRefs = ref<any>([]);
+
+const toggleUpdate = async (id: string, index?: number) => {
+  idUpdating.value = idUpdating.value === id ? "" : id;
+
+  // This act update value for idUpdating field and enable input and need async function here to work correctly
+  await sleep(0);
+
+  if (index !== undefined) {
+    inputUpdateRefs.value[index].focus();
+  }
 };
 
 const addTask = async () => {
   if (!taskName.value) return;
   await createRecord("todos", { name: taskName.value });
   taskName.value = "";
+};
+
+const updateTask = (todo: Todo, isChecked = false) => {
+  updateRecord("todos", todo.id, { name: todo.name, isFinish: todo.isFinish });
+  if (!isChecked) {
+    toggleUpdate(todo.id);
+  }
+};
+
+const deleteTask = (id: string) => {
+  deleteRecord("todos", id);
 };
 </script>

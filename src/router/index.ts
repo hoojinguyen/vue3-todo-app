@@ -19,14 +19,9 @@ const router = createRouter({
       component: () => import("@/views/AboutView.vue"),
     },
     {
-      path: "/todo-store",
-      name: "todo-store",
-      component: () => import("@/views/TodoUseStoreView.vue"),
-    },
-    {
-      path: "/todo-thinbackend",
-      name: "todo-thinbackend",
-      component: () => import("@/views/TodoUseThinBackendView.vue"),
+      path: "/todo-list",
+      name: "todo-list",
+      component: () => import("@/views/TodoListView.vue"),
     },
   ],
 });

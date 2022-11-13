@@ -1,13 +1,5 @@
 <template>
   <template v-if="isLoggedIn">
-    <div class="flex flex-col justify-center items-center">
-      <button
-        class="border-solid border-2 px-10 py-3 border-red-500 rounded-xl font-bold text-lg hover:bg-red-500 hover:text-white"
-        @click="logout"
-      >
-        LOGOUT
-      </button>
-    </div>
     <div class="flex flex-col justify-center items-center pt-10">
       <h1 class="font-bold text-3xl">Todo App use ThinBackend</h1>
       <div class="w-full text-center mt-10">
@@ -16,7 +8,7 @@
           type="text"
           placeholder="Please enter the todo"
           v-model="taskName"
-          @keyup.enter="addTask"
+          @keyup.enter="handler.addTask"
         />
       </div>
       <div class="w-full mt-5 flex flex-col justify-center items-center gap-4">
@@ -30,21 +22,20 @@
               type="checkbox"
               class="accent-green-800 w-8 h-8"
               v-model="todo.isFinish"
-              @change="updateTask(todo, true)"
+              @change="handler.updateTask(todo, true)"
             />
-            <label
-              class="text-lg font-semibold"
-              :class="{ 'line-through decoration-slate-500': todo.isFinish }"
-            >
-              <input
-                ref="inputUpdateRefs"
-                class="bg-inherit w-full focus:outline-none pb-1 border-b-2 border-green-500 disabled:border-none"
-                type="text"
-                v-model="todo.name"
-                @keyup.enter="updateTask(todo)"
-                :disabled="todo.id !== idUpdating"
-              />
-            </label>
+            <input
+              ref="inputUpdateRefs"
+              :class="{
+                'disabled:line-through disabled:decoration-red-500':
+                  todo.isFinish,
+              }"
+              class="text-2xl font-semibold bg-inherit w-full focus:outline-none pb-1 border-b-2 border-green-500 disabled:border-none"
+              type="text"
+              v-model="todo.name"
+              @keyup.enter="handler.updateTask(todo)"
+              :disabled="todo.id !== idUpdating"
+            />
           </div>
           <div class="float-right mt-2 flex gap-3">
             <button
@@ -55,7 +46,7 @@
             </button>
             <button
               class="text-lg hover:text-red-500"
-              @click="deleteTask(todo.id)"
+              @click="handler.deleteTask(todo.id)"
             >
               <font-awesome-icon icon="fa-solid fa-trash-can" />
             </button>
@@ -69,41 +60,22 @@
       <h1 class="mb-10 font-bold text-2xl tracking-wide">
         You need login to access data from thin backend
       </h1>
-      <button
-        class="border-solid border-2 px-10 py-3 border-red-500 rounded-xl font-bold text-lg hover:bg-red-500 hover:text-white"
-        @click="login"
-      >
-        LOGIN
-      </button>
     </div>
   </template>
 </template>
 
 <script setup lang="ts">
 import { useAuth } from "@/composables/auth";
+import { useTodo, type ITodo } from "@/composables/todo";
 import { sleep } from "@/utils";
-import { createRecord, deleteRecord, query, updateRecord } from "thin-backend";
-import { useQuery } from "thin-backend-vue";
 import { ref } from "vue";
 
-export interface Todo {
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-  userId: string;
-  isFinish: boolean;
-}
-
 const { isLoggedIn, login, logout } = useAuth();
-
-const todos = useQuery(query("todos").orderBy("createdAt"));
+const { todos, add, update, deleteById } = useTodo();
 
 const taskName = ref("");
-
 const idUpdating = ref("");
-
-const inputUpdateRefs = ref<any>([]);
+const inputUpdateRefs = ref<HTMLInputElement[]>([]);
 
 const toggleUpdate = async (id: string, index?: number) => {
   idUpdating.value = idUpdating.value === id ? "" : id;
@@ -116,20 +88,20 @@ const toggleUpdate = async (id: string, index?: number) => {
   }
 };
 
-const addTask = async () => {
-  if (!taskName.value) return;
-  await createRecord("todos", { name: taskName.value });
-  taskName.value = "";
-};
-
-const updateTask = (todo: Todo, isChecked = false) => {
-  updateRecord("todos", todo.id, { name: todo.name, isFinish: todo.isFinish });
-  if (!isChecked) {
-    toggleUpdate(todo.id);
-  }
-};
-
-const deleteTask = (id: string) => {
-  deleteRecord("todos", id);
+const handler = {
+  addTask: async () => {
+    if (!taskName.value) return;
+    await add({ name: taskName.value });
+    taskName.value = "";
+  },
+  updateTask: async (todo: ITodo, isChecked = false) => {
+    await update(todo);
+    if (!isChecked) {
+      toggleUpdate(todo.id);
+    }
+  },
+  deleteTask: async (id: string) => {
+    await deleteById(id);
+  },
 };
 </script>

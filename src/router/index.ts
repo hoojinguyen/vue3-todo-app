@@ -23,11 +23,6 @@ const router = createRouter({
       name: "todo-list",
       component: () => import("@/views/TodoListView.vue"),
     },
-    {
-      path: "/todo-store",
-      name: "todo-store",
-      component: () => import("@/views/TodoUseStoreView.vue"),
-    },
   ],
 });
 

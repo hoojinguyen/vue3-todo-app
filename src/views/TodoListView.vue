@@ -1,7 +1,43 @@
 <template>
   <template v-if="isLoggedIn">
     <div class="flex flex-col justify-center items-center pt-10">
-      <h1 class="font-bold text-3xl">Todo App use ThinBackend</h1>
+      <h1 class="font-bold text-3xl">Todo List App</h1>
+      <div class="mt-10">
+        <label
+          for="default-toggle"
+          class="inline-flex relative items-center cursor-pointer"
+        >
+          <span
+            class="mr-3 text-lg font-bold"
+            :class="[
+              isLoadFromLocal
+                ? 'text-green-500 dark:text-gray-300'
+                : 'text-gray-500 dark:text-gray-300',
+            ]"
+            >Use Local
+          </span>
+          <input
+            type="checkbox"
+            value=""
+            id="default-toggle"
+            class="sr-only peer"
+            @change="toogleLoadDataMode"
+          />
+          <div
+            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"
+          ></div>
+          <span
+            class="ml-3 text-lg font-bold"
+            :class="[
+              !isLoadFromLocal
+                ? 'text-green-500 dark:text-gray-300'
+                : 'text-gray-500 dark:text-gray-300',
+            ]"
+            >Use ThinBackend
+          </span>
+        </label>
+      </div>
+
       <div class="w-full text-center mt-10">
         <input
           class="w-3/5 border-solid rounded-lg border-2 border-slate-500 p-5 text-lg focus:outline-none focus:border-green-500 focus:ring-green-500 peer"
@@ -66,12 +102,29 @@
 
 <script setup lang="ts">
 import { useAuth } from "@/composables/auth";
-import { useTodo, type ITodo } from "@/composables/todo";
+import { useTodoThinBackend } from "@/composables/thin-backend";
+import { useTodoStore } from "@/stores/todo";
+import type { IStore, ITodo } from "@/types";
+import { EStore } from "@/constants";
 import { sleep } from "@/utils";
-import { ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
-const { isLoggedIn, login, logout } = useAuth();
-const { todos, add, update, deleteById } = useTodo();
+const { isLoggedIn } = useAuth();
+const todoLocal = useTodoStore();
+const todoThinBackend = useTodoThinBackend();
+
+const loadDataFrom = ref<IStore>(EStore.LOCAL);
+
+const isLoadFromLocal = computed(() => loadDataFrom.value === EStore.LOCAL);
+const todos = computed(() =>
+  loadDataFrom.value === EStore.LOCAL
+    ? todoLocal.todos
+    : todoThinBackend.todos.value
+);
+
+const toogleLoadDataMode = (e: any) => {
+  loadDataFrom.value = e.target.checked ? EStore.THIN : EStore.LOCAL;
+};
 
 const taskName = ref("");
 const idUpdating = ref("");
@@ -91,17 +144,32 @@ const toggleUpdate = async (id: string, index?: number) => {
 const handler = {
   addTask: async () => {
     if (!taskName.value) return;
-    await add({ name: taskName.value });
+
+    if (isLoadFromLocal.value) {
+      todoLocal.add({ name: taskName.value });
+    } else {
+      await todoThinBackend.add({ name: taskName.value });
+    }
+
     taskName.value = "";
   },
   updateTask: async (todo: ITodo, isChecked = false) => {
-    await update(todo);
+    if (isLoadFromLocal.value) {
+      todoLocal.update(todo);
+    } else {
+      await todoThinBackend.update(todo);
+    }
+
     if (!isChecked) {
       toggleUpdate(todo.id);
     }
   },
   deleteTask: async (id: string) => {
-    await deleteById(id);
+    if (isLoadFromLocal.value) {
+      todoLocal.deleteById(id);
+    } else {
+      await todoThinBackend.deleteById(id);
+    }
   },
 };
 </script>

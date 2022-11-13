@@ -1,30 +1,43 @@
-import { ref } from "vue";
+import type { ITodo, ITodoCreate, ITodoUpdate } from "@/types";
 import { defineStore } from "pinia";
+import { ref, type Ref } from "vue";
 
-export type TodoItem = {
-  id: string;
-  name: string;
-};
+import { Storage, uuid } from "@/utils";
 
-export type TodoList = TodoItem[];
+const storage = new Storage<ITodo[]>("todos", "sessionStorage");
+export interface IUseTodoStore {
+  todos: Ref<ITodo[]>;
+  add: (todo: ITodoCreate) => void;
+  update: (todo: ITodoUpdate) => void;
+  deleteById: (id: string) => void;
+}
 
 export const useTodoStore = defineStore("todo", () => {
-  const list = ref<TodoList>([]);
+  const getDataFromStorage = () => storage.get();
+  const setDataForStorage = (data: ITodo[]) => storage.set(data);
 
-  const add = (item: TodoItem) => list.value.push(item);
+  const todos = ref<ITodo[]>(getDataFromStorage() || []);
 
-  const remove = (id: string) =>
-    list.value.splice(
-      list.value.findIndex((item) => item.id === id),
-      1
-    );
+  const add = (todo: ITodoCreate) => {
+    todos.value.push({ ...todo, id: uuid() });
+    setDataForStorage(todos.value);
+  };
 
-  const update = (itemUpdated: TodoItem) => {
-    const index = list.value.findIndex((item) => item.id === itemUpdated.id);
+  const update = (todo: ITodoUpdate) => {
+    const index = todos.value.findIndex((item) => item.id === todo.id);
     if (index !== -1) {
-      list.value[index] = itemUpdated;
+      todos.value[index] = todo;
+      setDataForStorage(todos.value);
     }
   };
 
-  return { list, add, remove, update };
+  const deleteById = (id: string) => {
+    todos.value.splice(
+      todos.value.findIndex((item) => item.id === id),
+      1
+    );
+    setDataForStorage(todos.value);
+  };
+
+  return { todos, add, update, deleteById };
 });

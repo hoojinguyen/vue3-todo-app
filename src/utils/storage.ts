@@ -1,6 +1,6 @@
 type StorageType = "localStorage" | "sessionStorage";
 
-export default class Storage<T = unknown> {
+export class Storage<T = unknown> {
   private readonly key: string;
   private readonly storageType: StorageType;
 

@@ -1,52 +1,26 @@
+import type { ITodo, ITodoCreate, ITodoUpdate } from "@/types";
 import { createRecord, deleteRecord, query, updateRecord } from "thin-backend";
 import { useQuery } from "thin-backend-vue";
-import { computed, ref, type Ref } from "vue";
-
-export interface ITodo {
-  id: string;
-  name: string;
-  userId?: string;
-  isFinish?: boolean;
-  updatedAt?: string;
-  createdAt?: string;
-}
-
-export interface ITodoCreate {
-  name: string;
-}
-
-export interface ITodoUpdate extends ITodo {}
-
-export type IStore = "thin-backend" | "localStorage";
+import { ref, type Ref } from "vue";
 
 export interface IUseTodo {
-  store: Ref<IStore>;
   todos: Ref<ITodo[] | null>;
   isLoading: Ref<boolean>;
-  switchStore: (store: IStore) => void;
   add: (todo: ITodoCreate) => Promise<void>;
   update: (todo: ITodoUpdate) => Promise<void>;
   deleteById: (id: string) => Promise<void>;
   //   deleteByIds?: (ids: string[]) => Promise<void>;
 }
 
-export function useTodo(): IUseTodo {
+export function useTodoThinBackend(): IUseTodo {
   const isLoading = ref(false);
-  const store = ref<IStore>("thin-backend");
   const todos = useQuery(query("todos").orderBy("createdAt"));
-
-  //   const isLocalStorage = computed(() => store.value === "localStorage");
-  const isThinBackedn = computed(() => store.value === "thin-backend");
-
-  const switchStore = (v: IStore) => {
-    store.value = v;
-  };
 
   const add = async (todo: ITodoCreate) => {
     isLoading.value = true;
 
     if (!todo.name) return;
-    if (isThinBackedn.value) await createRecord("todos", { name: todo.name });
+    await createRecord("todos", { name: todo.name });
 
     isLoading.value = false;
   };
@@ -72,9 +46,7 @@ export function useTodo(): IUseTodo {
 
   return {
     todos,
-    store,
     isLoading,
-    switchStore,
     add,
     update,
     deleteById,

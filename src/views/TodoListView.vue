@@ -9,11 +9,7 @@
         >
           <span
             class="mr-3 text-lg font-bold"
-            :class="[
-              isLoadFromLocal
-                ? 'text-green-500 dark:text-gray-300'
-                : 'text-gray-500 dark:text-gray-300',
-            ]"
+            :class="[isLoadFromLocal ? 'text-green-500' : 'text-gray-500']"
             >Use Local
           </span>
           <input
@@ -28,11 +24,7 @@
           ></div>
           <span
             class="ml-3 text-lg font-bold"
-            :class="[
-              !isLoadFromLocal
-                ? 'text-green-500 dark:text-gray-300'
-                : 'text-gray-500 dark:text-gray-300',
-            ]"
+            :class="[!isLoadFromLocal ? 'text-green-500' : 'text-gray-500']"
             >Use ThinBackend
           </span>
         </label>
@@ -40,7 +32,7 @@
 
       <div class="w-full text-center mt-10">
         <input
-          class="w-3/5 border-solid rounded-lg border-2 border-slate-500 p-5 text-lg focus:outline-none focus:border-green-500 focus:ring-green-500 peer"
+          class="w-3/5 border-solid rounded-lg border-2 border-slate-500 p-5 text-lg focus:outline-none focus:border-green-500 focus:ring-green-500 peer text-black"
           type="text"
           placeholder="Please enter the todo"
           v-model="taskName"
@@ -51,12 +43,12 @@
         <div
           v-for="(todo, index) in todos"
           :key="todo.id"
-          class="inline-block w-3/5 p-5 border-2 border-solid border-slate-400 rounded-xl hover:bg-slate-100 hover:cursor-pointer"
+          class="inline-block w-3/5 p-5 border-2 border-solid border-slate-400 rounded-xl hover:bg-slate-100 hover:dark:bg-slate-700"
         >
           <div class="float-left flex justify-start items-center gap-10">
             <input
               type="checkbox"
-              class="accent-green-800 w-8 h-8"
+              class="accent-green-800 w-8 h-8 hover:cursor-pointer"
               v-model="todo.isFinish"
               @change="handler.updateTask(todo, true)"
             />

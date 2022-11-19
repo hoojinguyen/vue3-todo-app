@@ -1,12 +1,14 @@
 <template>
-  <header class="border-solid border-b-2 border-stale-400 rounded-lg pb-3">
+  <header class="border-solid border-b-2 border-stone-200 rounded-lg pb-3">
     <div class="flex justify-between items-center">
       <div class="max-w-xs max-h-xs">
-        <img
-          src="../assets/images/logo.svg"
-          alt="logo"
-          class="object-contain w-14"
-        />
+        <a href="./">
+          <img
+            src="../assets/images/logo.svg"
+            alt="logo"
+            class="object-contain w-14"
+          />
+        </a>
       </div>
       <nav class="flex justify-end items-center gap-5">
         <RouterLink
@@ -26,9 +28,9 @@
     <slot></slot>
   </main>
   <footer
-    class="border-solid border-t-2 border-stale-400 rounded-lg text-center pt-5"
+    class="border-solid border-t-2 border-stone-200 rounded-lg text-center pt-5"
   >
-    <h2 class="font-bold text-lg antialiased tracking-wider text-stone-700">
+    <h2 class="font-bold text-lg antialiased tracking-wider">
       Created by Hooji ❤️‍🔥
     </h2>
   </footer>

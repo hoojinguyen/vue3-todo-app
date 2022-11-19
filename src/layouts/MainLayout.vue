@@ -8,7 +8,7 @@
           class="object-contain w-14"
         />
       </div>
-      <nav class="flex justify-end gap-5">
+      <nav class="flex justify-end items-center gap-5">
         <RouterLink
           v-for="route in routes"
           :key="route.path"
@@ -17,24 +17,14 @@
         >
           {{ route.name }}
         </RouterLink>
-        <button
-          class="font-bold text-base tracking-wide leading-4 hover:bg-transparent border-b-2 pb-2"
-          :class="[
-            isLoggedIn
-              ? 'border-red-500 hover:text-red-500'
-              : 'border-green-500 hover:text-green-500',
-          ]"
-          @click="authHandle"
-        >
-          {{ isLoggedIn ? "Logout" : "Login" }}
-        </button>
+        <AuthButton />
+        <ThemeToggle />
       </nav>
     </div>
   </header>
   <main>
     <slot></slot>
   </main>
-
   <footer
     class="border-solid border-t-2 border-stale-400 rounded-lg text-center pt-5"
   >
@@ -45,18 +35,14 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth } from "@/composables/auth";
 import { RouterLink } from "vue-router";
 
-const { isLoggedIn, login, logout } = useAuth();
+import AuthButton from "@/components/AuthButton.vue";
+import ThemeToggle from "@/components/ThemeToggle.vue";
 
 const routes = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
   { name: "Todo list", path: "/todo-list" },
 ];
-
-const authHandle = async () => {
-  return await (isLoggedIn.value ? logout() : login());
-};
 </script>

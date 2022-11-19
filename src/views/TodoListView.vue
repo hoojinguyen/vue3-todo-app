@@ -103,11 +103,11 @@
 <script setup lang="ts">
 import { useAuth } from "@/composables/auth";
 import { useTodoThinBackend } from "@/composables/thin-backend";
+import { EStore } from "@/constants";
 import { useTodoStore } from "@/stores/todo";
 import type { IStore, ITodo } from "@/types";
-import { EStore } from "@/constants";
 import { sleep } from "@/utils";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 const { isLoggedIn } = useAuth();
 const todoLocal = useTodoStore();

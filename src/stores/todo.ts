@@ -4,7 +4,7 @@ import { ref, type Ref } from "vue";
 
 import { Storage, uuid } from "@/utils";
 
-const storage = new Storage<ITodo[]>("todos", "sessionStorage");
+const storage = new Storage<ITodo[]>("todos", "localStorage");
 export interface IUseTodoStore {
   todos: Ref<ITodo[]>;
   add: (todo: ITodoCreate) => void;
@@ -13,7 +13,7 @@ export interface IUseTodoStore {
 }
 
 export const useTodoStore = defineStore("todo", () => {
-  const getDataFromStorage = () => storage.get();
+  const getDataFromStorage = () => storage.getJSON();
   const setDataForStorage = (data: ITodo[]) => storage.set(data);
 
   const todos = ref<ITodo[]>(getDataFromStorage() || []);

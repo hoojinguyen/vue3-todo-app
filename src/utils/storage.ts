@@ -1,3 +1,4 @@
+import { isObject } from "./object";
 type StorageType = "localStorage" | "sessionStorage";
 
 export class Storage<T = unknown> {
@@ -9,7 +10,7 @@ export class Storage<T = unknown> {
     this.storageType = storageType;
   }
 
-  get(): T | null {
+  getJSON(): T | null {
     try {
       const value = window[this.storageType].getItem(this.key) ?? "";
       return JSON.parse(value);
@@ -18,9 +19,14 @@ export class Storage<T = unknown> {
     }
   }
 
+  get(): any {
+    const value = window[this.storageType].getItem(this.key) ?? "";
+    return value ? value : null;
+  }
+
   set(value: T): void {
-    const strValue = JSON.stringify(value);
-    window[this.storageType].setItem(this.key, strValue);
+    const strValue = isObject(value) ? JSON.stringify(value) : value;
+    window[this.storageType].setItem(this.key, strValue as string);
   }
 
   remove(): void {

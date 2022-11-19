@@ -14,9 +14,9 @@
           </span>
           <input
             type="checkbox"
-            value=""
             id="default-toggle"
             class="sr-only peer"
+            :checked="!isLoadFromLocal"
             @change="toogleLoadDataMode"
           />
           <div
@@ -98,14 +98,16 @@ import { useTodoThinBackend } from "@/composables/thin-backend";
 import { EStore } from "@/constants";
 import { useTodoStore } from "@/stores/todo";
 import type { IStore, ITodo } from "@/types";
-import { sleep } from "@/utils";
+import { sleep, Storage } from "@/utils";
 import { computed, ref } from "vue";
+
+const storage = new Storage<IStore>("store", "localStorage");
 
 const { isLoggedIn } = useAuth();
 const todoLocal = useTodoStore();
 const todoThinBackend = useTodoThinBackend();
 
-const loadDataFrom = ref<IStore>(EStore.LOCAL);
+const loadDataFrom = ref<IStore>(storage.get() || EStore.LOCAL);
 
 const isLoadFromLocal = computed(() => loadDataFrom.value === EStore.LOCAL);
 const todos = computed(() =>
@@ -116,6 +118,7 @@ const todos = computed(() =>
 
 const toogleLoadDataMode = (e: any) => {
   loadDataFrom.value = e.target.checked ? EStore.THIN : EStore.LOCAL;
+  storage.set(loadDataFrom.value);
 };
 
 const taskName = ref("");

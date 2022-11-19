@@ -44,7 +44,6 @@ import ThemeToggle from "@/components/ThemeToggle.vue";
 
 const routes = [
   { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
   { name: "Todo list", path: "/todo-list" },
 ];
 </script>

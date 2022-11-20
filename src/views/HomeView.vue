@@ -4,7 +4,7 @@
       Hello, Welcome to Todo App
     </h1>
     <span class="text-base font-medium tracking-wider"
-      >Todo App includes these feature:</span
+      >Todo App includes these features:</span
     >
     <div class="flex justify-center flex-wrap gap-3">
       <a

@@ -11,7 +11,6 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faPen, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { initThinBackend } from "thin-backend";
 
 const app = createApp(App);
 
@@ -23,7 +22,3 @@ app.use(router);
 app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.mount("#app");
-
-initThinBackend({
-  host: "https://todo-with-vue3.thinbackend.app",
-});

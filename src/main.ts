@@ -4,12 +4,12 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 
-import "./assets/styles/main.css";
 import "./assets/styles/base.css";
+import "./assets/styles/main.css";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faTrashCan, faPen } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faPen, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { initThinBackend } from "thin-backend";
 

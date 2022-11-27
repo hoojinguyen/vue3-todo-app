@@ -62,7 +62,7 @@
         "vue-tsc": "^1.0.8"
     },
     "lint-staged": {
-        "*.vue,*.js,*.jsx,*.ts,*.tsx": [
+        "*.{vue,js,ts,jsx,tsx}": [
             "npm run lint",
             "git add ."
         ]

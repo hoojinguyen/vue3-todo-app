@@ -13,6 +13,11 @@ module.exports = {
         "prettier/prettier": "error",
         // not needed for vue 3
         "vue/no-multiple-template-root": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/interface-name-prefix": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
     },
     overrides: [
         {

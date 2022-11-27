@@ -11,7 +11,7 @@
         "build-only": "vite build",
         "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.json --fix --ignore-path .gitignore",
-        "prepare": "husky install",
+        "prepare": "husky install"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^6.2.1",

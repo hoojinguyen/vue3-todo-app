@@ -1,8 +1,8 @@
-import service from "@/api/http";
+import service from "@/api/http"
 
 const loginApi = {
-  // Verify the login instance
-  postVerification: (params: object) => service.post(`/login`, params),
-};
+    // Verify the login instance
+    postVerification: (params: object) => service.post(`/login`, params),
+}
 
-export default loginApi;
+export default loginApi

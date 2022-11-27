@@ -1,4 +1,4 @@
 export enum EStore {
-  THIN = "thin-backend",
-  LOCAL = "local",
+    THIN = "thin-backend",
+    LOCAL = "local",
 }

@@ -1,1 +1,1 @@
-export type IStore = "thin-backend" | "local";
+export type IStore = "thin-backend" | "local"
